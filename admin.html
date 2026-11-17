@@ -1,0 +1,493 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#075b75">
+<title>لوحة إدارة مستشفى الإسكان التخصصي</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Tahoma,Arial,sans-serif;
+  background:#f3f7fa;
+  color:#183344;
+}
+header{
+  background:#075b75;
+  color:white;
+  padding:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+}
+header h2{margin:0;font-size:19px}
+header p{margin:6px 0 0;font-size:12px;color:#d6edf3}
+button{
+  border:0;
+  border-radius:8px;
+  padding:10px 15px;
+  cursor:pointer;
+  font-family:inherit;
+}
+.logout{background:#fff;color:#075b75}
+.container{max-width:1150px;margin:25px auto;padding:0 14px}
+.login-box{
+  max-width:420px;
+  margin:65px auto;
+  background:white;
+  padding:28px;
+  border-radius:15px;
+  box-shadow:0 5px 25px #1232;
+}
+.login-box h2{text-align:center;color:#075b75}
+input,select{
+  width:100%;
+  padding:12px;
+  border:1px solid #d6e1e8;
+  border-radius:8px;
+  margin:7px 0 15px;
+  font-family:inherit;
+  background:white;
+}
+.primary{
+  width:100%;
+  background:#087b98;
+  color:white;
+  font-size:15px;
+}
+.message{
+  font-size:13px;
+  color:#b42318;
+  line-height:1.8;
+}
+.hidden{display:none!important}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+  gap:13px;
+  margin-bottom:22px;
+}
+.stat{
+  background:white;
+  border-radius:12px;
+  padding:18px;
+  box-shadow:0 2px 10px #1231;
+}
+.stat span{font-size:13px;color:#687d8b}
+.stat strong{
+  display:block;
+  font-size:27px;
+  color:#075b75;
+  margin-top:10px;
+}
+.section{
+  background:white;
+  border-radius:12px;
+  padding:18px;
+  box-shadow:0 2px 10px #1231;
+}
+.section h3{margin-top:0;color:#075b75}
+.filters{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:10px;
+}
+.table-wrap{overflow-x:auto}
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:850px;
+}
+th,td{
+  padding:13px 10px;
+  text-align:right;
+  border-bottom:1px solid #e8eef2;
+  font-size:13px;
+  vertical-align:middle;
+}
+th{background:#eef6f9;color:#075b75}
+.status{
+  border-radius:20px;
+  padding:5px 10px;
+  font-size:12px;
+  display:inline-block;
+  background:#edf2f5;
+}
+.new{background:#fff2cc;color:#805b00}
+.confirmed{background:#d9f5e5;color:#146c3a}
+.rejected{background:#ffe0e0;color:#a32020}
+.completed{background:#dceaff;color:#174d91}
+.actions select{min-width:120px;margin:0}
+.delete{
+  background:#ffe7e7;
+  color:#a32020;
+  margin-top:5px;
+}
+.empty{
+  text-align:center;
+  color:#788b97;
+  padding:30px;
+}
+#dashboard{display:none}
+.small{font-size:12px;color:#718491}
+@media(max-width:600px){
+  header{padding:15px}
+  .filters{grid-template-columns:1fr}
+  .container{margin-top:15px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div>
+    <h2>مستشفى الإسكان التخصصي</h2>
+    <p>لوحة تحكم الإدارة وإدارة مواعيد المرضى</p>
+  </div>
+  <button id="logoutBtn" class="logout hidden" onclick="logout()">تسجيل الخروج</button>
+</header>
+
+<!-- تسجيل دخول المدير -->
+<div id="loginBox" class="login-box">
+  <h2>دخول الإدارة</h2>
+  <p class="small">يرجى تسجيل الدخول بحساب المدير المعتمد.</p>
+
+  <form id="loginForm">
+    <label>البريد الإلكتروني</label>
+    <input id="email" type="email" placeholder="البريد الإلكتروني" required>
+
+    <label>كلمة المرور</label>
+    <input id="password" type="password" placeholder="كلمة المرور" required>
+
+    <button class="primary" type="submit" id="loginBtn">تسجيل الدخول</button>
+    <p id="loginMessage" class="message"></p>
+  </form>
+</div>
+
+<!-- لوحة التحكم -->
+<div id="dashboard">
+  <main class="container">
+
+    <h3>مرحباً بك في لوحة الإدارة</h3>
+
+    <div class="stats">
+      <div class="stat">
+        <span>إجمالي الحجوزات</span>
+        <strong id="totalCount">0</strong>
+      </div>
+      <div class="stat">
+        <span>حجوزات جديدة</span>
+        <strong id="newCount">0</strong>
+      </div>
+      <div class="stat">
+        <span>حجوزات مؤكدة</span>
+        <strong id="confirmedCount">0</strong>
+      </div>
+      <div class="stat">
+        <span>حجوزات مكتملة</span>
+        <strong id="completedCount">0</strong>
+      </div>
+      <div class="stat">
+        <span>حجوزات مرفوضة</span>
+        <strong id="rejectedCount">0</strong>
+      </div>
+    </div>
+
+    <section class="section">
+      <h3>طلبات حجز المرضى</h3>
+
+      <div class="filters">
+        <input id="searchInput" type="search"
+          placeholder="ابحث باسم المريض أو رقم الهاتف...">
+
+        <select id="filterStatus">
+          <option value="">جميع الحالات</option>
+          <option value="جديد">جديد</option>
+          <option value="مؤكد">مؤكد</option>
+          <option value="مرفوض">مرفوض</option>
+          <option value="مكتمل">مكتمل</option>
+        </select>
+      </div>
+
+      <p id="loadMessage" class="small">جاري تحميل الحجوزات...</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>اسم المريض</th>
+              <th>رقم الهاتف</th>
+              <th>التخصص</th>
+              <th>التاريخ</th>
+              <th>ملاحظات</th>
+              <th>الحالة</th>
+              <th>إدارة الطلب</th>
+            </tr>
+          </thead>
+          <tbody id="appointmentsBody">
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script type="module">
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/13.3.0/firebase-app.js";
+
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+}
+from "https://www.gstatic.com/firebasejs/13.3.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  onSnapshot,
+  doc,
+  updateDoc,
+  deleteDoc
+}
+from "https://www.gstatic.com/firebasejs/13.3.0/firebase-firestore.js";
+
+// إعدادات مشروع Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyDunZUqias5VE1HuX8RhrEoLALc95qrwfc",
+  authDomain: "al-eskan-hospital.firebaseapp.com",
+  projectId: "al-eskan-hospital",
+  storageBucket: "al-eskan-hospital.firebasestorage.app",
+  messagingSenderId: "1056701167928",
+  appId: "1:1056701167928:web:d766b868e9f49c0e20e9cd"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let appointments = [];
+let unsubscribe = null;
+
+const loginBox = document.getElementById("loginBox");
+const dashboard = document.getElementById("dashboard");
+const loginMessage = document.getElementById("loginMessage");
+const loadMessage = document.getElementById("loadMessage");
+const body = document.getElementById("appointmentsBody");
+
+// حماية النصوص القادمة من قاعدة البيانات
+function safe(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[char]);
+}
+
+// تسجيل الدخول
+document.getElementById("loginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const btn = document.getElementById("loginBtn");
+
+  btn.disabled = true;
+  btn.textContent = "جاري الدخول...";
+  loginMessage.textContent = "";
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch(error) {
+    loginMessage.textContent =
+      "تعذر تسجيل الدخول. تحقق من البريد الإلكتروني وكلمة المرور.";
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "تسجيل الدخول";
+  }
+});
+
+// مراقبة حالة المستخدم
+onAuthStateChanged(auth, user => {
+  if (unsubscribe) {
+    unsubscribe();
+    unsubscribe = null;
+  }
+
+  if (!user) {
+    loginBox.classList.remove("hidden");
+    dashboard.style.display = "none";
+    document.getElementById("logoutBtn").classList.add("hidden");
+    appointments = [];
+    return;
+  }
+
+  loginBox.classList.add("hidden");
+  dashboard.style.display = "block";
+  document.getElementById("logoutBtn").classList.remove("hidden");
+  loadMessage.textContent = "جاري تحميل الحجوزات...";
+
+  // قواعد Firestore هي التي تتحقق من صلاحية المدير
+  unsubscribe = onSnapshot(
+    collection(db, "appointmentRequests"),
+
+    snapshot => {
+      appointments = snapshot.docs.map(item => ({
+        id: item.id,
+        ...item.data()
+      }));
+
+      appointments.sort((a,b) => {
+        const dateA = a.createdAt?.toMillis?.() || 0;
+        const dateB = b.createdAt?.toMillis?.() || 0;
+        return dateB - dateA;
+      });
+
+      loadMessage.textContent =
+        "عدد الطلبات المحفوظة: " + appointments.length;
+
+      render();
+    },
+
+    error => {
+      console.error(error);
+      loadMessage.textContent =
+        "ليس لديك صلاحية مشاهدة الحجوزات، أو حدث خطأ في الاتصال.";
+
+      if (error.code === "permission-denied") {
+        loadMessage.textContent =
+          "تم رفض الوصول. تحقق من صلاحية حساب المدير في Firebase.";
+      }
+    }
+  );
+});
+
+// عرض الإحصائيات والجدول
+function render() {
+  const count = status =>
+    appointments.filter(a => a.status === status).length;
+
+  document.getElementById("totalCount").textContent =
+    appointments.length;
+
+  document.getElementById("newCount").textContent = count("جديد");
+  document.getElementById("confirmedCount").textContent = count("مؤكد");
+  document.getElementById("completedCount").textContent = count("مكتمل");
+  document.getElementById("rejectedCount").textContent = count("مرفوض");
+
+  const search = document.getElementById("searchInput")
+    .value.trim().toLowerCase();
+
+  const filter = document.getElementById("filterStatus").value;
+
+  const filtered = appointments.filter(a => {
+    const matchesSearch =
+      String(a.name || "").toLowerCase().includes(search) ||
+      String(a.phone || "").toLowerCase().includes(search);
+
+    const matchesStatus = !filter || a.status === filter;
+
+    return matchesSearch && matchesStatus;
+  });
+
+  if (!filtered.length) {
+    body.innerHTML =
+      '<tr><td colspan="7" class="empty">لا توجد حجوزات مطابقة.</td></tr>';
+    return;
+  }
+
+  body.innerHTML = filtered.map(a => {
+    let statusClass = "new";
+
+    if (a.status === "مؤكد") statusClass = "confirmed";
+    if (a.status === "مرفوض") statusClass = "rejected";
+    if (a.status === "مكتمل") statusClass = "completed";
+
+    return `
+      <tr>
+        <td>${safe(a.name)}</td>
+        <td>${safe(a.phone)}</td>
+        <td>${safe(a.specialty)}</td>
+        <td>${safe(a.date)}</td>
+        <td>${safe(a.notes || "لا توجد")}</td>
+        <td>
+          <span class="status ${statusClass}">
+            ${safe(a.status || "جديد")}
+          </span>
+        </td>
+        <td class="actions">
+          <select onchange="changeStatus('${a.id}',this.value)">
+            <option value="جديد" ${a.status === "جديد" ? "selected" : ""}>جديد</option>
+            <option value="مؤكد" ${a.status === "مؤكد" ? "selected" : ""}>مؤكد</option>
+            <option value="مرفوض" ${a.status === "مرفوض" ? "selected" : ""}>مرفوض</option>
+            <option value="مكتمل" ${a.status === "مكتمل" ? "selected" : ""}>مكتمل</option>
+          </select>
+          <button class="delete" onclick="deleteBooking('${a.id}')">
+            حذف
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+// البحث والتصفية
+document.getElementById("searchInput")
+  .addEventListener("input", render);
+
+document.getElementById("filterStatus")
+  .addEventListener("change", render);
+
+// تغيير حالة الحجز
+window.changeStatus = async (id, status) => {
+  const allowed = ["جديد", "مؤكد", "مرفوض", "مكتمل"];
+
+  if (!allowed.includes(status)) return;
+
+  try {
+    await updateDoc(
+      doc(db, "appointmentRequests", id),
+      { status: status }
+    );
+  } catch(error) {
+    alert("تعذر تحديث حالة الحجز. تحقق من صلاحيات المدير.");
+    console.error(error);
+  }
+};
+
+// حذف الحجز
+window.deleteBooking = async id => {
+  if (!confirm("هل أنت متأكد من حذف هذا الحجز نهائياً؟")) return;
+
+  try {
+    await deleteDoc(doc(db, "appointmentRequests", id));
+  } catch(error) {
+    alert("تعذر حذف الحجز. تحقق من صلاحيات المدير.");
+    console.error(error);
+  }
+};
+
+// تسجيل الخروج
+window.logout = async () => {
+  if (!confirm("هل تريد تسجيل الخروج؟")) return;
+
+  try {
+    await signOut(auth);
+  } catch(error) {
+    alert("تعذر تسجيل الخروج.");
+  }
+};
+</script>
+
+</body>
+</html>

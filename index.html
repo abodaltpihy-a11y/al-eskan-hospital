@@ -1,0 +1,577 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#075b75">
+<title>مستشفى الإسكان التخصصي</title>
+
+<style>
+:root {
+  --blue:#075b75;
+  --blue2:#0c7891;
+  --teal:#16a6a0;
+  --light:#eef8fa;
+  --text:#183746;
+  --muted:#718792;
+  --white:#ffffff;
+  --shadow:0 12px 35px rgba(7,91,117,.09);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Tahoma,Arial,sans-serif;
+  background:#f7fbfc;
+  color:var(--text);
+  line-height:1.8;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
+.container{width:min(1120px,92%);margin:auto}
+header{
+  background:white;
+  position:sticky;top:0;z-index:20;
+  box-shadow:0 3px 18px #1232;
+}
+.nav{
+  display:flex;align-items:center;
+  justify-content:space-between;
+  min-height:76px;gap:15px;
+}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{
+  width:45px;height:45px;border-radius:14px;
+  display:grid;place-items:center;
+  color:white;background:var(--blue);
+  font-size:27px;font-weight:bold;
+}
+.logo h2{font-size:17px;color:var(--blue)}
+.logo small{display:block;color:var(--muted);font-size:10px}
+nav{display:flex;gap:20px;align-items:center}
+nav a{font-size:13px;color:#45616c}
+nav a:hover{color:var(--teal)}
+.btn{
+  border:0;border-radius:12px;padding:11px 19px;
+  background:var(--blue);color:white;
+  font-weight:bold;transition:.2s;
+}
+.btn:hover{background:var(--blue2);transform:translateY(-2px)}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.btn-outline{
+  background:white;color:var(--blue);
+  border:1px solid #cbdfe5;
+}
+.hero{
+  background:linear-gradient(120deg,#064c68,#087b91);
+  color:white;padding:75px 0 85px;
+  position:relative;overflow:hidden;
+}
+.hero:after{
+  content:"✚";position:absolute;
+  font-size:320px;opacity:.055;
+  left:5%;top:-90px;
+}
+.hero-content{max-width:650px;position:relative;z-index:1}
+.tag{
+  display:inline-block;background:#ffffff20;
+  border:1px solid #ffffff35;
+  border-radius:30px;padding:5px 14px;
+  font-size:12px;margin-bottom:18px;
+}
+.hero h1{font-size:clamp(30px,5vw,49px);line-height:1.5}
+.hero h1 span{color:#80e2d8}
+.hero p{color:#d8eff3;margin:15px 0 25px;max-width:560px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.hero .btn{background:var(--teal)}
+.hero .btn-outline{background:transparent;color:white;border-color:#ffffff70}
+.stats{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:15px;margin-top:-35px;position:relative;z-index:2;
+}
+.stat{
+  background:white;border-radius:17px;padding:20px;
+  box-shadow:var(--shadow);text-align:center;
+}
+.stat strong{display:block;color:var(--blue);font-size:25px}
+.stat span{font-size:12px;color:var(--muted)}
+section{padding:65px 0}
+.section-head{text-align:center;margin-bottom:32px}
+.section-head h2{font-size:27px;color:var(--blue)}
+.section-head p{font-size:13px;color:var(--muted);margin-top:5px}
+.search-box{
+  background:white;padding:22px;border-radius:20px;
+  box-shadow:var(--shadow);margin-top:40px;
+}
+.search-grid{
+  display:grid;grid-template-columns:repeat(3,1fr) auto;
+  gap:12px;align-items:end;
+}
+.field label{display:block;font-size:12px;margin-bottom:7px;color:#49636e}
+.field input,.field select,.field textarea{
+  width:100%;padding:12px;border:1px solid #dce8ec;
+  border-radius:10px;background:#fbfdfe;outline:none;
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  border-color:var(--teal);
+}
+.cards{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+}
+.specialty,.doctor,.service{
+  background:white;border-radius:17px;padding:22px;
+  box-shadow:var(--shadow);transition:.2s;
+}
+.specialty:hover,.doctor:hover,.service:hover{
+  transform:translateY(-4px);
+}
+.specialty-icon{
+  width:52px;height:52px;border-radius:15px;
+  background:var(--light);display:grid;place-items:center;
+  font-size:25px;margin-bottom:13px;
+}
+.specialty h3,.doctor h3,.service h3{font-size:15px;color:var(--blue)}
+.specialty p,.doctor p,.service p{
+  font-size:12px;color:var(--muted);margin-top:5px;
+}
+.doctor{text-align:center}
+.doctor img{
+  width:100px;height:100px;border-radius:50%;
+  object-fit:cover;background:var(--light);
+  margin-bottom:12px;border:4px solid #e4f5f5;
+}
+.doctor .btn{margin-top:14px;width:100%;font-size:12px}
+.services{background:#edf7f9}
+.service{text-align:center}
+.service .specialty-icon{margin:0 auto 12px}
+.booking-layout{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:30px;align-items:center;
+}
+.booking-info{
+  background:linear-gradient(145deg,#075b75,#0c8996);
+  color:white;border-radius:22px;padding:30px;
+}
+.booking-info h2{font-size:25px}
+.booking-info p{color:#d7eff1;margin-top:10px;font-size:14px}
+.booking-info li{list-style:none;margin-top:15px;font-size:13px}
+.booking-form{
+  background:white;padding:25px;border-radius:20px;
+  box-shadow:var(--shadow);
+}
+.booking-form h3{color:var(--blue);margin-bottom:18px}
+.booking-form .field{margin-bottom:14px}
+.booking-form .btn{width:100%}
+footer{
+  background:#063c53;color:#d5e9ee;
+  padding:35px 0;text-align:center;
+}
+footer strong{color:white}
+footer small{display:block;margin-top:8px;color:#a8c7d0}
+.modal{
+  position:fixed;inset:0;background:#001b2bd9;
+  display:none;align-items:center;justify-content:center;
+  padding:18px;z-index:50;
+}
+.modal.active{display:flex}
+.modal-content{
+  background:white;border-radius:20px;
+  padding:25px;width:min(480px,100%);
+  max-height:90vh;overflow:auto;
+}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.close{border:0;background:#eef5f7;border-radius:9px;padding:5px 12px}
+#message{
+  display:none;padding:12px;border-radius:10px;
+  margin-bottom:14px;font-size:13px;
+}
+#message.success{display:block;background:#e5f8ef;color:#18754c}
+#message.error{display:block;background:#fff0ed;color:#a83c2e}
+.mobile-menu{display:none}
+@media(max-width:800px){
+  nav{display:none}
+  .mobile-menu{display:block}
+  .cards{grid-template-columns:repeat(2,1fr)}
+  .search-grid{grid-template-columns:1fr 1fr}
+  .booking-layout{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .hero{padding:55px 0 65px}
+  .hero h1{font-size:29px}
+  .stats{gap:8px}
+  .stat{padding:13px 5px}
+  .stat strong{font-size:19px}
+  .stat span{font-size:10px}
+  .cards{gap:10px}
+  .specialty,.doctor,.service{padding:14px}
+  .search-grid{grid-template-columns:1fr}
+  section{padding:48px 0}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="container nav">
+  <a href="#" class="logo">
+   <div class="logo-icon">+</div>
+   <div>
+    <h2>مستشفى الإسكان التخصصي</h2>
+    <small>AL-ESKAN SPECIALIZED HOSPITAL</small>
+   </div>
+  </a>
+  <nav>
+   <a href="#home">الرئيسية</a>
+   <a href="#specialties">التخصصات</a>
+   <a href="#doctors">الأطباء</a>
+   <a href="#services">خدماتنا</a>
+   <a href="#booking">الحجز</a>
+  </nav>
+  <button class="btn mobile-menu" onclick="document.getElementById('booking').scrollIntoView({behavior:'smooth'})">احجز موعداً</button>
+  <button class="btn" onclick="openBooking()">احجز موعداً</button>
+ </div>
+</header>
+
+<main>
+<section class="hero" id="home">
+ <div class="container">
+  <div class="hero-content">
+   <span class="tag">رعاية صحية واهتمام بالإنسان</span>
+   <h1>صحتك أولويتنا،<br><span>ورعايتك مسؤوليتنا</span></h1>
+   <p>
+    في مستشفى الإسكان التخصصي نسعى لتقديم تجربة رعاية صحية
+    منظمة تجمع بين الاهتمام بالمريض وسهولة الوصول إلى الخدمات الطبية.
+   </p>
+   <div class="hero-actions">
+    <button class="btn" onclick="openBooking()">احجز موعدك الآن</button>
+    <a class="btn btn-outline" href="#specialties">اكتشف التخصصات</a>
+   </div>
+  </div>
+ </div>
+</section>
+
+<div class="container stats">
+ <div class="stat"><strong>+</strong><span>رعاية واهتمام</span></div>
+ <div class="stat"><strong>24/7</strong><span>هدفنا الاستجابة والاهتمام</span></div>
+ <div class="stat"><strong>♥</strong><span>صحة الإنسان أولاً</span></div>
+</div>
+
+<div class="container">
+ <div class="search-box">
+  <div class="section-head">
+   <h2>ابحث عن الخدمة الطبية</h2>
+   <p>اختر التخصص وتعرّف على الأطباء المتاحين</p>
+  </div>
+  <div class="search-grid">
+   <div class="field">
+    <label>التخصص الطبي</label>
+    <select id="searchSpecialty">
+     <option value="">كل التخصصات</option>
+     <option>الباطنية</option>
+     <option>الأطفال</option>
+     <option>القلب</option>
+     <option>الأسنان</option>
+     <option>النساء والولادة</option>
+     <option>العظام</option>
+    </select>
+   </div>
+   <div class="field">
+    <label>اسم الطبيب</label>
+    <input id="searchDoctor" placeholder="اكتب اسم الطبيب">
+   </div>
+   <div class="field">
+    <label>تاريخ الزيارة</label>
+    <input id="searchDate" type="date">
+   </div>
+   <button class="btn" onclick="searchDoctors()">بحث</button>
+  </div>
+ </div>
+</div>
+
+<section id="specialties">
+ <div class="container">
+  <div class="section-head">
+   <h2>التخصصات الطبية</h2>
+   <p>خدمات طبية متعددة في مكان واحد</p>
+  </div>
+  <div class="cards">
+   <div class="specialty"><div class="specialty-icon">🩺</div><h3>الباطنية</h3><p>خدمات الرعاية والتقييم الطبي</p></div>
+   <div class="specialty"><div class="specialty-icon">👶</div><h3>طب الأطفال</h3><p>رعاية ومتابعة صحة الأطفال</p></div>
+   <div class="specialty"><div class="specialty-icon">❤️</div><h3>أمراض القلب</h3><p>متابعة وتقييم أمراض القلب</p></div>
+   <div class="specialty"><div class="specialty-icon">🦷</div><h3>طب الأسنان</h3><p>خدمات صحة الفم والأسنان</p></div>
+   <div class="specialty"><div class="specialty-icon">🤰</div><h3>النساء والولادة</h3><p>رعاية صحة المرأة</p></div>
+   <div class="specialty"><div class="specialty-icon">🦴</div><h3>العظام</h3><p>تقييم ومتابعة مشكلات العظام</p></div>
+   <div class="specialty"><div class="specialty-icon">👁️</div><h3>العيون</h3><p>خدمات فحص ومتابعة النظر</p></div>
+   <div class="specialty"><div class="specialty-icon">🧠</div><h3>الأعصاب</h3><p>تقييم الحالات العصبية</p></div>
+  </div>
+ </div>
+</section>
+
+<section id="doctors">
+ <div class="container">
+  <div class="section-head">
+   <h2>الأطباء</h2>
+   <p>نماذج تجريبية للعرض، وليست قائمة أطباء معتمدة</p>
+  </div>
+  <div class="cards" id="doctorList">
+   <article class="doctor" data-specialty="الباطنية">
+    <img src="https://placehold.co/200x200/eaf5f7/075b75?text=Doctor" alt="صورة تجريبية">
+    <h3>طبيب الباطنية</h3><p>قسم الباطنية</p>
+    <button class="btn" onclick="openBooking('الباطنية')">طلب موعد</button>
+   </article>
+   <article class="doctor" data-specialty="الأطفال">
+    <img src="https://placehold.co/200x200/eaf5f7/075b75?text=Doctor" alt="صورة تجريبية">
+    <h3>طبيب الأطفال</h3><p>قسم الأطفال</p>
+    <button class="btn" onclick="openBooking('الأطفال')">طلب موعد</button>
+   </article>
+   <article class="doctor" data-specialty="القلب">
+    <img src="https://placehold.co/200x200/eaf5f7/075b75?text=Doctor" alt="صورة تجريبية">
+    <h3>طبيب القلب</h3><p>قسم القلب</p>
+    <button class="btn" onclick="openBooking('القلب')">طلب موعد</button>
+   </article>
+   <article class="doctor" data-specialty="الأسنان">
+    <img src="https://placehold.co/200x200/eaf5f7/075b75?text=Doctor" alt="صورة تجريبية">
+    <h3>طبيب الأسنان</h3><p>قسم الأسنان</p>
+    <button class="btn" onclick="openBooking('الأسنان')">طلب موعد</button>
+   </article>
+  </div>
+ </div>
+</section>
+
+<section class="services" id="services">
+ <div class="container">
+  <div class="section-head">
+   <h2>خدماتنا</h2>
+   <p>نسعى لتسهيل رحلة المريض</p>
+  </div>
+  <div class="cards">
+   <div class="service"><div class="specialty-icon">📅</div><h3>طلب المواعيد</h3><p>تقديم طلب زيارة إلكترونياً</p></div>
+   <div class="service"><div class="specialty-icon">📋</div><h3>تنظيم الخدمات</h3><p>تسهيل الوصول إلى الأقسام</p></div>
+   <div class="service"><div class="specialty-icon">🤝</div><h3>خدمة المراجعين</h3><p>تجربة استخدام سهلة وواضحة</p></div>
+   <div class="service"><div class="specialty-icon">🔒</div><h3>خصوصية المعلومات</h3><p>العمل على حماية بيانات المستخدمين</p></div>
+  </div>
+ </div>
+</section>
+
+<section id="booking">
+ <div class="container booking-layout">
+  <div class="booking-info">
+   <h2>خطوتك الأولى نحو الرعاية</h2>
+   <p>أرسل طلب موعدك، وسيتم التواصل معك بعد مراجعة الطلب من الجهة المختصة.</p>
+   <ul>
+    <li>✓ اختر التخصص الطبي</li>
+    <li>✓ أدخل بيانات التواصل</li>
+    <li>✓ أرسل طلب الموعد</li>
+    <li>✓ انتظر تأكيد الحجز من الجهة المختصة</li>
+   </ul>
+  </div>
+  <form class="booking-form" id="bookingForm">
+   <h3>طلب حجز موعد</h3>
+   <div id="message" role="status" aria-live="polite"></div>
+   <div class="field">
+    <label for="patientName">اسم المريض</label>
+    <input id="patientName" required placeholder="الاسم الكامل">
+   </div>
+   <div class="field">
+    <label for="patientPhone">رقم الهاتف</label>
+    <input id="patientPhone" type="tel" required placeholder="رقم التواصل">
+   </div>
+   <div class="field">
+    <label for="patientSpecialty">التخصص</label>
+    <select id="patientSpecialty" required>
+     <option value="">اختر التخصص</option>
+     <option>الباطنية</option><option>الأطفال</option>
+     <option>القلب</option><option>الأسنان</option>
+     <option>النساء والولادة</option><option>العظام</option>
+     <option>العيون</option><option>الأعصاب</option>
+    </select>
+   </div>
+   <div class="field">
+    <label for="patientDate">تاريخ الموعد المطلوب</label>
+    <input id="patientDate" type="date" required>
+   </div>
+   <div class="field">
+    <label for="patientNotes">ملاحظات عامة (اختياري)</label>
+    <textarea id="patientNotes" rows="3" placeholder="ملاحظة غير طبية ضرورية للحجز"></textarea>
+   </div>
+   <button class="btn" id="submitBooking" type="submit">إرسال طلب الموعد</button>
+   <p style="font-size:11px;color:#8a9ba3;margin-top:10px">
+    هذا نموذج تجريبي لإرسال طلب موعد، ولا يعني تأكيد الحجز.
+   </p>
+  </form>
+ </div>
+</section>
+</main>
+
+<footer>
+ <div class="container">
+  <strong>مستشفى الإسكان التخصصي</strong>
+  <p>رعاية صحية تبدأ بالاهتمام بالإنسان</p>
+  <small>© 2026 AL-ESKAN SPECIALIZED HOSPITAL — نموذج أولي تجريبي</small>
+ </div>
+</footer>
+
+<div class="modal" id="bookingModal">
+ <div class="modal-content">
+  <div class="modal-head">
+   <h3>طلب موعد</h3>
+   <button class="close" onclick="closeBooking()">إغلاق ✕</button>
+  </div>
+  <p style="font-size:13px;color:#718792;margin-bottom:15px">
+   انتقل إلى نموذج الحجز لإكمال بياناتك.
+  </p>
+  <button class="btn" style="width:100%" onclick="closeBooking();document.getElementById('booking').scrollIntoView({behavior:'smooth'})">
+   متابعة الحجز
+  </button>
+ </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/13.3.0/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/13.3.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDunZUqias5VE1HuX8RhrEoLALc95qrwfc",
+  authDomain: "al-eskan-hospital.firebaseapp.com",
+  projectId: "al-eskan-hospital",
+  storageBucket: "al-eskan-hospital.firebasestorage.app",
+  messagingSenderId: "1056701167928",
+  appId: "1:1056701167928:web:d766b868e9f49c0e20e9cd"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const $ = id => document.getElementById(id);
+
+function openBooking(specialty = "") {
+  if (specialty) $("patientSpecialty").value = specialty;
+  $("bookingModal").classList.add("active");
+}
+
+function closeBooking() {
+  $("bookingModal").classList.remove("active");
+}
+
+function searchDoctors() {
+  const specialty = $("searchSpecialty").value;
+  const name = $("searchDoctor").value.trim();
+
+  document.querySelectorAll(".doctor").forEach(card => {
+    const matchesSpecialty =
+      !specialty || card.dataset.specialty === specialty;
+    const matchesName =
+      !name || card.innerText.includes(name);
+
+    card.style.display =
+      matchesSpecialty && matchesName ? "" : "none";
+  });
+
+  $("doctors").scrollIntoView({ behavior: "smooth" });
+}
+
+function showMessage(text, type) {
+  const box = $("message");
+  box.textContent = text;
+  box.className = type;
+  box.style.display = "block";
+}
+
+function getToday() {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+const today = getToday();
+
+$("patientDate").min = today;
+$("searchDate").min = today;
+
+$("bookingForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const booking = {
+    name: $("patientName").value.trim(),
+    phone: $("patientPhone").value.trim(),
+    specialty: $("patientSpecialty").value,
+    date: $("patientDate").value,
+    notes: $("patientNotes").value.trim(),
+    createdAt: serverTimestamp(),
+    status: "جديد"
+  };
+
+  if (
+    !booking.name ||
+    !booking.phone ||
+    !booking.specialty ||
+    !booking.date
+  ) {
+    showMessage("يرجى إكمال الحقول المطلوبة", "error");
+    return;
+  }
+
+  if (booking.date < today) {
+    showMessage("اختر تاريخاً صحيحاً في المستقبل", "error");
+    return;
+  }
+
+  const submitButton = $("submitBooking");
+
+  submitButton.disabled = true;
+  submitButton.textContent = "جارٍ إرسال الطلب...";
+
+  try {
+    const docRef = await addDoc(
+      collection(db, "appointmentRequests"),
+      booking
+    );
+
+    showMessage(
+      "تم إرسال طلبك بنجاح. رقم الطلب: " + docRef.id +
+      ". انتظر مراجعة الإدارة وتأكيد الموعد.",
+      "success"
+    );
+
+    $("bookingForm").reset();
+    $("patientDate").min = today;
+
+  } catch (error) {
+    console.error("Firebase error:", error);
+
+    let errorMessage =
+      "تعذر إرسال الطلب. تحقق من اتصال الإنترنت وإعدادات قاعدة البيانات.";
+
+    if (error.code === "permission-denied") {
+      errorMessage =
+        "تم رفض الإرسال من قاعدة البيانات. راجع قواعد Firestore.";
+    }
+
+    showMessage(errorMessage, "error");
+
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = "إرسال طلب الموعد";
+  }
+});
+
+$("bookingModal").addEventListener("click", function(e) {
+  if (e.target === $("bookingModal")) closeBooking();
+});
+
+window.openBooking = openBooking;
+window.closeBooking = closeBooking;
+window.searchDoctors = searchDoctors;
+</script>
+
+</body>
+</html>
